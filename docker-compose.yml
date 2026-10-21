@@ -1,0 +1,64 @@
+# Production stack: HTTPS front door (Caddy) + app (backend + built web UI) + isolated code runner.
+#   1) put DOMAIN, RUNNER_SECRET, JWT_SECRET and your API keys in .env       2) docker compose up -d --build
+services:
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports: ["80:80", "443:443", "443:443/udp"]
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data             # certificates live here: keep this volume
+      - caddy_config:/config
+    depends_on:
+      backend: { condition: service_healthy }
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      RUNNER_URL: http://runner:9000
+      RUNNER_SECRET: ${RUNNER_SECRET:?set RUNNER_SECRET in .env}
+      DATABASE_URL: sqlite:////data/interviewsaathi.db
+      TTS_CACHE_DIR: /data/tts_cache
+      APP_URL: https://${DOMAIN:-localhost}
+      CORS_ORIGINS: https://${DOMAIN:-localhost}
+      REQUIRE_STRONG_SECRETS: "1"
+    volumes: ["appdata:/data"]        # the database lives here: back it up
+    expose: ["8000"]                  # reachable only through Caddy, never directly from the internet
+    networks: [sandbox, default]
+    depends_on: [runner]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://localhost:8000/api/meta', timeout=4)"]
+      interval: 15s
+      timeout: 6s
+      retries: 6
+      start_period: 20s
+
+  runner:                              # runs untrusted student code: keep it locked down
+    build: ./runner
+    restart: unless-stopped
+    environment:
+      RUNNER_SECRET: ${RUNNER_SECRET:?set RUNNER_SECRET in .env}
+    networks: [sandbox]                # internal network: NO internet access, can only talk to the backend
+    init: true                         # tini as PID 1 reaps stray processes
+    read_only: true
+    tmpfs: ["/tmp:size=128m,mode=1777"]
+    cap_drop: [ALL]
+    cap_add: [SETUID, SETGID]          # only to switch student code to the `nobody` user
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 512
+    mem_limit: 1g
+    cpus: 1.5
+
+networks:
+  sandbox:
+    internal: true
+volumes:
+  appdata:
+  caddy_data:
+  caddy_config:

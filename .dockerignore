@@ -1,0 +1,9 @@
+.env
+.git
+**/node_modules
+**/__pycache__
+**/*.db
+**/.tts_cache
+frontend/dist
+frontend/_ssr_app
+**/.pytest_cache

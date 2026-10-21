@@ -1,0 +1,59 @@
+# Render Blueprint: New + > Blueprint > pick your GitHub repo > fill in the secrets it asks for.
+# Free-tier reality (checked Oct 2026): the web service sleeps after 15 min idle (about a minute to wake) and its disk is wiped on every
+# restart, so data MUST live in Postgres. Render's FREE Postgres expires after 30 days: for a real deployment move to a paid
+# database or an external one (Neon, Supabase...) by editing DATABASE_URL.
+databases:
+  - name: interviewsaathi-db
+    databaseName: interviewsaathi
+    user: interviewsaathi
+    plan: free
+
+services:
+  - type: web
+    name: interviewsaathi
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile      # builds the web UI and the API into one service
+    dockerContext: .
+    plan: free                                # use "starter" to stop it sleeping
+    healthCheckPath: /api/meta
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase: { name: interviewsaathi-db, property: connectionString }
+      - key: JWT_SECRET
+        generateValue: true
+      - key: REQUIRE_STRONG_SECRETS
+        value: "1"
+      - key: GNANI_API_KEY
+        sync: false
+      - key: LLM_PROVIDER
+        value: openai
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_BASE_URL
+        value: https://api.groq.com/openai/v1
+      - key: OPENAI_MODEL
+        value: openai/gpt-oss-120b
+      - key: ADMIN_EMAILS
+        sync: false
+      - key: APP_URL                 # your public URL, e.g. https://interviewsaathi.onrender.com (or your Vercel URL)
+        sync: false
+      # Add these later in the Render dashboard (Environment tab) only if you need them:
+      #   CORS_ORIGINS=https://your-project.vercel.app    (UI on Vercel)
+      #   RUNNER_URL / RUNNER_SECRET                      (coding rounds; see the runner note below)
+      #   SMTP_HOST / SMTP_USER / SMTP_PASSWORD / SMTP_FROM  (real password-reset emails)
+
+  # --- Optional code runner as a Render PRIVATE service. Private services are NOT free (Starter plan or higher), and Render cannot give
+  # --- it the no-internet / read-only / capability-dropping isolation that docker-compose.yml does. Prefer a small VPS for the runner.
+  # - type: pserv
+  #   name: interviewsaathi-runner
+  #   runtime: docker
+  #   dockerfilePath: ./runner/Dockerfile
+  #   dockerContext: ./runner
+  #   plan: starter
+  #   envVars:
+  #     - key: PORT
+  #       value: "9000"
+  #     - key: RUNNER_SECRET
+  #       sync: false
+  #   # then on the web service:  RUNNER_URL=http://interviewsaathi-runner:9000   and the same RUNNER_SECRET

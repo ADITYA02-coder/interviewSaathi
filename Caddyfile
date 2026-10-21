@@ -1,0 +1,13 @@
+# Caddy gets and renews a free HTTPS certificate for $DOMAIN automatically (Let's Encrypt).
+# HTTPS is REQUIRED: browsers only allow the microphone on https:// pages (or localhost).
+{$DOMAIN:localhost} {
+	encode zstd gzip
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		Permissions-Policy "microphone=(self), camera=(self)"
+		-Server
+	}
+	reverse_proxy backend:8000     # also proxies the live-transcription WebSocket (/api/voice/stream)
+}
