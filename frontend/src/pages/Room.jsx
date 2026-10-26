@@ -114,7 +114,7 @@ export default function Room({ id }) {
         if (live.current.ui.review) { setReview({ text, ms: res.durationMs }); setPhase("review"); return; }
         return submit(text, "voice", res.durationMs);
       } catch (e) {
-        if (e.code === "gnani_not_configured") { setTextMode(true); setToast("Voice recognition isn't set up on the server. Please type your answers."); setTyping(true); setPhase("listening"); return; }
+        if (e.code === "gnani_not_configured") { setTextMode(true); setToast("Voice recognition is temporarily unavailable. Please type your answer instead."); setTyping(true); setPhase("listening"); return; }
         setToast(`${e.message} You can try again or type.`); setPhase("listening"); setHeard(false);
       }
     }
@@ -149,7 +149,7 @@ export default function Room({ id }) {
     if (voice) {
       try { rec.current = new VoiceRecorder({ levelRef: userLevel, onPartial: (t) => setSaid(t), onStatus: (s) => { if (s === "speech") setHeard(true); if (s === "long-silence") setToast("Take your time. You can also type your answer."); } }); rec.current.patienceMs = ui.patience; await rec.current.open(); }
       catch { voice = false; setToast("Microphone unavailable. You can type your answers."); }
-    } else setToast("Voice answers need the Gnani key on the server. You can type your answers for now.");
+    } else setToast("Voice mode is temporarily unavailable. You can type your answers for now.");
     setTextMode(!voice); live.current.textMode = !voice;
     deliver(iv.opening.text);
   };
@@ -233,7 +233,7 @@ export default function Room({ id }) {
             <div className="gate"><div className="box">
               <div style={{ width: 150, height: 150, borderRadius: "50%", overflow: "hidden", boxShadow: "0 0 0 4px rgba(245,179,1,.6)" }}><Avatar persona={persona} state="listening" /></div>
               <h2>{name} is ready for you</h2>
-              <p style={{ color: "#a9c6ce" }}>{meta?.gnani_configured ? "Allow your microphone, then just talk. She'll wait while you think and ask follow-ups." : "Voice isn't configured on the server, so you'll type your answers."} Use headphones to avoid echo.</p>
+              <p style={{ color: "#a9c6ce" }}>{meta?.gnani_configured ? "Allow your microphone, then just talk. She'll wait while you think and ask follow-ups." : "Voice mode is temporarily unavailable, so you'll type your answers."} Use headphones to avoid echo.</p>
               <button className="btn gold lg" onClick={join}>Join interview</button>
               <a href="#/setup" style={{ color: "#8fb3bc" }}>Change settings</a>
             </div></div>)}

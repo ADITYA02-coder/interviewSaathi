@@ -55,11 +55,11 @@ export default function App() {
     <Ctx.Provider value={ctx}>
       <div className="shell">
         <header className="nav">
-          <a className="logo" href="#/"><i />InterviewSaathi</a>
+          <a className="logo" href="#/"><i /><span>Interview<span className="logo-accent">Saathi</span></span></a>
           <nav>
-            <a href="#/setup" className={name === "setup" ? "on" : ""}>Practice</a>
-            <a href="#/code" className={name === "code" ? "on" : ""}>Code</a>
-            <a href="#/dashboard" className={name === "dashboard" ? "on" : ""}>Progress</a>
+            <a href="#/setup" className={name === "setup" ? "on" : ""}>Practice room</a>
+            <a href="#/code" className={name === "code" ? "on" : ""}>Coding lab</a>
+            <a href="#/dashboard" className={name === "dashboard" ? "on" : ""}>Your progress</a>
             {user?.role === "admin" && <a href="#/admin" className={name === "admin" ? "on" : ""}>Admin</a>}
             {user && !user.is_guest ? (<><a href="#/profile" className={name === "profile" ? "on" : ""}>{user.name.split(" ")[0]}</a><a href="#/" onClick={(e) => { e.preventDefault(); signOut(); }}>Sign out</a></>)
               : <a href="#/login" className={name === "login" ? "on" : ""}>{user ? "Save my progress" : "Sign in"}</a>}

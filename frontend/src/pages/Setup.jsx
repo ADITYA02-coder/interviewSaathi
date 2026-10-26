@@ -118,13 +118,13 @@ export default function Setup() {
             </div>
             {mic === "ok" && <div className="meter" style={{ marginTop: 12 }} aria-label="Microphone level"><i ref={meterEl} /></div>}
             {micMsg && <p className={mic === "denied" ? "err" : "sub"} style={{ marginTop: 10 }}>{micMsg}</p>}
-            {heard === "fallback" && <p className="notice" style={{ marginTop: 10 }}>Gnani voice isn't reachable, so this played the browser's built-in voice instead.</p>}
-            {meta && !meta.gnani_configured && <p className="notice" style={{ marginTop: 10 }}>Server has no GNANI_API_KEY yet. Voice answers are off; you can type your answers.</p>}
+            {heard === "fallback" && <p className="notice" style={{ marginTop: 10 }}>The enhanced voice is temporarily unavailable, so we played a browser voice instead.</p>}
+            {meta && !meta.gnani_configured && <p className="notice" style={{ marginTop: 10 }}>Voice mode is temporarily unavailable. You can still have a complete interview by typing your answers.</p>}
           </div>
           <div className="card">
             {err && <p className="err" role="alert" style={{ marginBottom: 12 }}>{err}</p>}
             <button className="btn gold lg" style={{ width: "100%" }} onClick={start} disabled={busy || !c.role.trim()}>{busy ? "Preparing your interviewer…" : "Start interview"}</button>
-            <p className="sub" style={{ marginTop: 10, textAlign: "center" }}>Interviewer brain: {meta?.llm_live ? "AI model" : "offline question bank"} · voice: {meta?.gnani_configured ? "Gnani Timbre + Prisma" : "demo"}</p>
+            <p className="sub" style={{ marginTop: 10, textAlign: "center" }}>Questions: {meta?.llm_live ? "adaptive AI" : "curated practice bank"} · voice: {meta?.gnani_configured ? "natural voice" : "text mode"}</p>
           </div>
         </div>
       </div>

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import Avatar from "../components/Avatar.jsx";
-import { useApp } from "../App.jsx";
 
 const LINES = [
   "Explain the difference between an interface and an abstract class in Java.",
@@ -9,7 +8,6 @@ const LINES = [
 ];
 
 export default function Landing() {
-  const { meta } = useApp();
   const level = useRef(0);
   const [i, setI] = useState(0);
   const [st, setSt] = useState("speaking");
@@ -28,12 +26,12 @@ export default function Landing() {
       <section className="hero">
         <div className="wrap">
           <div>
-            <span className="hero-kicker"><i /> YOUR NEXT INTERVIEW STARTS HERE</span>
-            <h1 style={{ marginTop: 18 }}>Show up ready.<br /><em>Speak with confidence.</em></h1>
-            <p className="lead">Get realistic, voice powered interview practice whenever you need it. Meet your AI interviewer, work through thoughtful follow ups, and leave with feedback you can use. In English, Hindi or Hinglish.</p>
+            <span className="hero-kicker"><i /> BUILT FOR THE MOMENT THAT MATTERS</span>
+            <h1 style={{ marginTop: 18 }}>Turn preparation<br /><em>into presence.</em></h1>
+            <p className="lead">A calmer, smarter way to prepare for the interview you actually want. Practise out loud with an AI interviewer that listens, follows up, and gives you a clear path to improve.</p>
             <div className="cta">
-              <a className="btn gold lg" href="#/setup">Start practising <span aria-hidden="true">→</span></a>
-              <a className="btn ghost lg" href="#/dashboard">View my progress</a>
+              <a className="btn gold lg" href="#/setup">Start a practice session <span aria-hidden="true">→</span></a>
+              <a className="btn ghost lg" href="#/dashboard">See your progress</a>
             </div>
             <div className="hero-trust"><span>✦ Free to get started</span><span>✦ No college required</span><span>✦ Speak or type</span></div>
           </div>
@@ -45,19 +43,28 @@ export default function Landing() {
         </div>
       </section>
 
+      <section className="proof-strip"><div className="wrap">
+        <div className="proof-intro"><span className="eyebrow">YOUR ADVANTAGE</span><h2>More than practice.</h2><p className="sub">A focused space to sound like yourself when the stakes are high.</p></div>
+        <div className="proof-grid">
+          <div className="proof-item"><span className="proof-icon">◒</span><b>Listen naturally</b><p className="sub">Speak in the language and rhythm that feels most comfortable to you.</p></div>
+          <div className="proof-item"><span className="proof-icon">↗</span><b>Go beyond scripts</b><p className="sub">Get thoughtful follow-ups that help you build real communication confidence.</p></div>
+          <div className="proof-item"><span className="proof-icon">✦</span><b>Improve with clarity</b><p className="sub">Walk away with practical feedback, not vague advice or empty scores.</p></div>
+        </div>
+      </div></section>
+
       <section className="section"><div className="wrap">
-        <span className="eyebrow">PRACTICE THAT FEELS REAL</span><h2>A conversation, not a question list.</h2>
-        <p className="sub" style={{ maxWidth: 640, fontSize: 18 }}>Get comfortable thinking out loud, answering naturally, and handling the follow up.</p>
+        <span className="eyebrow">A BETTER WAY TO REHEARSE</span><h2>Practice the conversation, not just the answer.</h2>
+        <p className="sub" style={{ maxWidth: 640, fontSize: 18 }}>Build the confidence to think clearly, communicate naturally, and handle the follow-up that changes the room.</p>
         <div className="pipe">
           <div><span className="n">01 · YOU SPEAK</span><b>Your answer</b><p className="sub">Your microphone captures it. The app detects when you finish, so no buttons to press.</p></div>
-          <div><span className="n">02 · HEAR</span><b>Gnani Prisma</b><p className="sub">Speech-to-text built for Indian languages and accents turns your voice into a transcript.</p><span className="pill green tag">speech-to-text</span></div>
+          <div><span className="n">02 · HEAR</span><b>Understands you</b><p className="sub">Speech recognition built for Indian languages and accents turns your voice into a clear transcript.</p><span className="pill green tag">speech recognition</span></div>
           <div><span className="n">03 · THINK</span><b>The interviewer</b><p className="sub">Reads your answer, reacts like a person, asks a relevant follow-up, and scores quietly in the background.</p></div>
-          <div><span className="n">04 · REPLY</span><b>Gnani Timbre</b><p className="sub">The next question is spoken back in a natural Indian voice while the face on screen lip-syncs to it.</p><span className="pill green tag">text-to-speech</span></div>
+          <div><span className="n">04 · REPLY</span><b>Feels conversational</b><p className="sub">The next question is spoken back in a natural voice while the face on screen lip-syncs to it.</p><span className="pill green tag">natural voice replies</span></div>
         </div>
       </div></section>
 
       <section className="section" style={{ paddingTop: 0 }}><div className="wrap">
-        <span className="eyebrow">MADE FOR YOUR NEXT STEP</span><h2>Feedback you can act on.</h2>
+        <span className="eyebrow">DESIGNED AROUND YOUR GROWTH</span><h2>Every session leaves you sharper.</h2>
         <div className="feat">
           <div><h3>Scored on substance</h3><p className="sub">Technical accuracy, relevance, completeness and clarity. Length and fancy English never raise your score, and accents or Hinglish are never penalised.</p></div>
           <div><h3>Missing concepts, named</h3><p className="sub">See what you got right, what you missed, and one possible strong answer for every question.</p></div>
@@ -66,7 +73,6 @@ export default function Landing() {
           <div><h3>Progress from real data</h3><p className="sub">Your dashboard is built only from interviews you actually completed. Nothing is made up.</p></div>
           <div><h3>Practice on your terms</h3><p className="sub">Build a routine that fits your goals, whether you're preparing for your first interview, changing careers or sharpening your skills. No school or organization required.</p></div>
         </div>
-        {meta && !meta.gnani_configured && <p className="notice" style={{ marginTop: 28 }}>Developer note: GNANI_API_KEY is not set on the server yet, so the app runs in text-and-browser-voice demo mode. Add the key to .env and restart to switch on Gnani voice.</p>}
       </div></section>
     </>
   );
