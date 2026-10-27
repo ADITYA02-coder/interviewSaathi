@@ -1,4 +1,5 @@
 import jwt as pyjwt
+import hmac
 from fastapi import APIRouter, Depends, Header, HTTPException
 from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy import select
@@ -20,6 +21,13 @@ def _promote_if_admin(db, u: User):
     """Grant admin access to accounts whose address is configured in ADMIN_EMAILS."""
     if u.email and u.email.lower() in settings.admin_emails and u.role != "admin":
         u.role = "admin"
+
+
+def _admin_password_matches(email: str, password: str) -> bool:
+    return not settings.admin_password or (
+        email.lower() in settings.admin_emails
+        and hmac.compare_digest(password, settings.admin_password)
+    )
 
 
 def user_out(u: User) -> dict:
@@ -62,6 +70,8 @@ def _guest_id(authorization: str) -> int | None:
 @router.post("/register")
 def register(body: RegisterIn, authorization: str = Header(default="")):
     email = body.email.lower()
+    if email in settings.admin_emails and not _admin_password_matches(email, body.password):
+        raise HTTPException(403, "Use the configured administrator password for this email.")
     with SessionLocal() as db:
         if db.scalar(select(User).where(User.email == email)):
             raise HTTPException(409, "An account with this email already exists. Try signing in.")
@@ -80,10 +90,15 @@ def register(body: RegisterIn, authorization: str = Header(default="")):
 
 @router.post("/login")
 def login(body: LoginIn):
+    admin_login = body.email.lower() in settings.admin_emails and settings.admin_password and _admin_password_matches(body.email, body.password)
+    if body.email.lower() in settings.admin_emails and not _admin_password_matches(body.email, body.password):
+        raise HTTPException(401, "Email or password is incorrect.")
     with SessionLocal() as db:
         user = db.scalar(select(User).where(User.email == body.email.lower()))
-        if not user or not user.password_hash or not verify_password(body.password, user.password_hash):
+        if not user or not user.password_hash or (not admin_login and not verify_password(body.password, user.password_hash)):
             raise HTTPException(401, "Email or password is incorrect.")
+        if admin_login and not verify_password(body.password, user.password_hash):
+            user.password_hash = hash_password(body.password)
         _promote_if_admin(db, user)
         db.commit()
         return {"token": make_token(user.id), "user": user_out(user)}

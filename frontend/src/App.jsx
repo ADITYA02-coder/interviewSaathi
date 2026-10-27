@@ -16,14 +16,16 @@ export const useApp = () => useContext(Ctx);
 
 export const go = (path) => { location.hash = "#/" + path; };
 const parse = () => { const [name = "", ...rest] = location.hash.replace(/^#\/?/, "").split("/"); return { name, arg: rest[0], rest }; };
+const initials = (name = "") => name.trim().split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase() || "?";
 
 export default function App() {
   const [route, setRoute] = useState(parse());
   const [user, setUser] = useState(null);
   const [meta, setMeta] = useState(null);
   const [ready, setReady] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
 
-  useEffect(() => { const f = () => { setRoute(parse()); window.scrollTo(0, 0); }; addEventListener("hashchange", f); return () => removeEventListener("hashchange", f); }, []);
+  useEffect(() => { const f = () => { setRoute(parse()); setProfileOpen(false); window.scrollTo(0, 0); }; addEventListener("hashchange", f); return () => removeEventListener("hashchange", f); }, []);
   useEffect(() => {
     api.meta().then(setMeta).catch(() => setMeta({ gnani_configured: false, llm: "unknown", languages: [], roles: [], offline: true }));
     (session.token ? api.me().then(setUser).catch(() => { session.token = ""; }) : Promise.resolve()).finally(() => setReady(true));
@@ -61,7 +63,17 @@ export default function App() {
             <a href="#/code" className={name === "code" ? "on" : ""}>Coding lab</a>
             <a href="#/dashboard" className={name === "dashboard" ? "on" : ""}>Your progress</a>
             {user?.role === "admin" && <a href="#/admin" className={name === "admin" ? "on" : ""}>Admin</a>}
-            {user && !user.is_guest ? (<><a href="#/profile" className={name === "profile" ? "on" : ""}>{user.name.split(" ")[0]}</a><a href="#/" onClick={(e) => { e.preventDefault(); signOut(); }}>Sign out</a></>)
+            {user && !user.is_guest ? (<div className="profile-menu">
+              <button className={`profile-trigger ${name === "profile" ? "on" : ""}`} type="button" aria-label="Open profile menu" aria-expanded={profileOpen} onClick={() => setProfileOpen((open) => !open)}>
+                <span className="profile-avatar" aria-hidden="true">{initials(user.name)}</span><span className="profile-caret" aria-hidden="true">⌄</span>
+              </button>
+              {profileOpen && <div className="profile-dropdown">
+                <div className="profile-summary"><span className="profile-avatar large" aria-hidden="true">{initials(user.name)}</span><div><b>{user.name}</b><span>{user.email}</span></div></div>
+                <a href="#/profile">Profile settings</a>
+                {user.role === "admin" && <a href="#/admin">Admin console</a>}
+                <button type="button" onClick={signOut}>Sign out</button>
+              </div>}
+            </div>)
               : <a href="#/login" className={name === "login" ? "on" : ""}>{user ? "Save my progress" : "Sign in"}</a>}
           </nav>
         </header>

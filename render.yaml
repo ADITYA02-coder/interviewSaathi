@@ -36,10 +36,13 @@ services:
         value: openai/gpt-oss-120b
       - key: ADMIN_EMAILS
         sync: false
-      - key: APP_URL                 # your public URL, e.g. https://interviewsaathi.onrender.com (or your Vercel URL)
+      - key: ADMIN_PASSWORD
         sync: false
+      - key: APP_URL                 # your public URL, e.g. https://interviewsaathi.onrender.com (or your Vercel URL)
+        value: https://interview-saathi-neon.vercel.app
+      - key: CORS_ORIGINS
+        value: https://interview-saathi-neon.vercel.app
       # Add these later in the Render dashboard (Environment tab) only if you need them:
-      #   CORS_ORIGINS=https://your-project.vercel.app    (UI on Vercel)
       #   RUNNER_URL / RUNNER_SECRET                      (coding rounds; see the runner note below)
       #   SMTP_HOST / SMTP_USER / SMTP_PASSWORD / SMTP_FROM  (real password-reset emails)
 

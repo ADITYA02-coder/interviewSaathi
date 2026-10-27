@@ -28,7 +28,7 @@ export default function Landing() {
           <div>
             <span className="hero-kicker"><i /> BUILT FOR THE MOMENT THAT MATTERS</span>
             <h1 style={{ marginTop: 18 }}>Turn preparation<br /><em>into presence.</em></h1>
-            <p className="lead">A calmer, smarter way to prepare for the interview you actually want. Practise out loud with an AI interviewer that listens, follows up, and gives you a clear path to improve.</p>
+            <p className="lead">A calmer, smarter way to prepare for the interview you actually want. Practise by actually talking with an AI interviewer that listens, follows up, and gives you a clear path to improve.</p>
             <div className="cta">
               <a className="btn gold lg" href="#/setup">Start a practice session <span aria-hidden="true">→</span></a>
               <a className="btn ghost lg" href="#/dashboard">See your progress</a>

@@ -39,6 +39,9 @@ class Settings:
     runner_url = _env("RUNNER_URL").rstrip("/")
     runner_secret = _env("RUNNER_SECRET")
     admin_emails = {e.strip().lower() for e in _env("ADMIN_EMAILS").split(",") if e.strip()}
+    # Optional deployment-level gate for configured admin addresses. Keep this in the
+    # hosting provider's secret environment, never in the frontend or repository.
+    admin_password = _env("ADMIN_PASSWORD")
     # "email": verification link by email.  "admin": no email is sent; an admin approves students in Admin > Users (good when you have no SMTP).
     verification_mode = "admin" if _env("EMAIL_VERIFICATION", "email").lower() == "admin" else "email"
     app_url = _env("APP_URL", "http://localhost:5173").rstrip("/")

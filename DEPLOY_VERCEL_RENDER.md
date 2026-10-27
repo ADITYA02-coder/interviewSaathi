@@ -50,6 +50,7 @@ git push -u origin main
 | `GNANI_API_KEY` | Your Gnani key (both scopes enabled) |
 | `OPENAI_API_KEY` | Your Groq key (or other LLM key; edit `OPENAI_BASE_URL`/`OPENAI_MODEL` in `render.yaml` if not Groq) |
 | `ADMIN_EMAILS` | The email you will register with, e.g. `you@gmail.com` |
+| `ADMIN_PASSWORD` | The password required for that configured admin email. Keep it only in Render Environment variables. |
 | `APP_URL` | `https://interviewsaathi.onrender.com`. If Render gives your service a different name/URL, fix this afterwards in the Environment tab |
 
 `JWT_SECRET` is generated for you and `DATABASE_URL` is wired to the database automatically.
@@ -95,8 +96,8 @@ In Render > your service > **Environment**, add/update:
 
 | Variable | Value |
 |---|---|
-| `CORS_ORIGINS` | `https://interviewsaathi.vercel.app` (comma-separate several: custom domain too) |
-| `APP_URL` | `https://interviewsaathi.vercel.app` (so reset/verification emails link to the UI) |
+| `CORS_ORIGINS` | `https://interview-saathi-neon.vercel.app` (comma-separate several: custom domain too) |
+| `APP_URL` | `https://interview-saathi-neon.vercel.app` (so reset/verification emails link to the UI) |
 
 Save; Render redeploys. The value must match the browser address **exactly**: `https`, no trailing slash.
 
