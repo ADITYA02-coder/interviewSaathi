@@ -45,6 +45,11 @@ main.page { flex: 1; padding: 32px 0 64px; }
 .field > label, .label { font-weight: 700; font-size: 14px; color: var(--ink-2); }
 input[type=text], input[type=email], input[type=password], select, textarea { width: 100%; font: inherit; padding: 12px 14px; border: 2px solid var(--line); border-radius: 12px; background: #fff; color: var(--text); }
 input:focus, select:focus, textarea:focus { border-color: var(--teal); outline: none; }
+.password-control { position: relative; }
+.password-control input { padding-right: 48px; }
+.password-toggle { position: absolute; top: 50%; right: 7px; display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 9px; background: transparent; color: var(--muted); transform: translateY(-50%); }
+.password-toggle:hover { background: #f0edf7; color: var(--teal-d); }
+.password-toggle svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 textarea { min-height: 110px; resize: vertical; }
 .seg { display: flex; flex-wrap: wrap; gap: 8px; }
 .seg button { border: 1px solid var(--line); background: #fff; border-radius: 999px; padding: 9px 17px; font-weight: 650; color: var(--text); transition: .15s; }

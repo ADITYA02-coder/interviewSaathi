@@ -6,6 +6,7 @@ export default function Auth() {
   const { signIn, user } = useApp();
   const [tab, setTab] = useState("register");
   const [f, setF] = useState({ name: "", email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
   const [err, setErr] = useState(""); const [busy, setBusy] = useState(false);
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
 
@@ -24,7 +25,9 @@ export default function Auth() {
       <form onSubmit={submit}>
         {tab === "register" && <div className="field"><label htmlFor="n">Your name</label><input id="n" type="text" required value={f.name} onChange={set("name")} autoComplete="name" /></div>}
         <div className="field"><label htmlFor="e">Email</label><input id="e" type="email" required value={f.email} onChange={set("email")} autoComplete="email" /></div>
-        <div className="field"><label htmlFor="p">Password {tab === "register" && <span className="sub">(8+ characters)</span>}</label><input id="p" type="password" required minLength={8} value={f.password} onChange={set("password")} autoComplete={tab === "login" ? "current-password" : "new-password"} /></div>
+        <div className="field"><label htmlFor="p">Password {tab === "register" && <span className="sub">(8+ characters)</span>}</label><div className="password-control"><input id="p" type={showPassword ? "text" : "password"} required minLength={8} value={f.password} onChange={set("password")} autoComplete={tab === "login" ? "current-password" : "new-password"} /><button type="button" className="password-toggle" onClick={() => setShowPassword((visible) => !visible)} aria-label={showPassword ? "Hide password" : "Show password"} aria-pressed={showPassword}>
+          <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M2.1 12s3.5-6 9.9-6 9.9 6 9.9 6-3.5 6-9.9 6-9.9-6-9.9-6Z" /><circle cx="12" cy="12" r="2.5" />{showPassword && <path d="m4 4 16 16" />}</svg>
+        </button></div></div>
         {err && <p className="err" role="alert" style={{ marginBottom: 12 }}>{err}</p>}
         {tab === "login" && <p style={{ margin: "-4px 0 14px", fontSize: 14 }}><a href="#/forgot">Forgot your password?</a></p>}
         <button className="btn gold" style={{ width: "100%" }} disabled={busy}>{busy ? "Please wait…" : tab === "login" ? "Sign in" : "Create account"}</button>
